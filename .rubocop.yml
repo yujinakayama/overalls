@@ -1,0 +1,28 @@
+# Enable the rails cops.
+AllCops:
+  Exclude:
+  - bin/**/*
+  - db/schema.rb
+  - vendor/**/*
+  RunRailsCops: true
+
+Metrics/LineLength:
+  Max: 100
+
+Style/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: separator
+
+Style/Documentation:
+  Enabled: false
+
+Style/EmptyElse:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Exclude:
+    - '*.gemspec'
+    - 'Guardfile'
