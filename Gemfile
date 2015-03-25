@@ -11,6 +11,7 @@ gem 'uglifier', '>= 1.3.0'
 group :development, :test do
   gem 'database_cleaner'
   gem 'factory_girl_rails'
+  gem 'faker'
   gem 'rspec-rails'
   gem 'rubocop', require: false
   gem 'spring'
