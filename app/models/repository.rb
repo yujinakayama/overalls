@@ -1,4 +1,6 @@
 class Repository < ActiveRecord::Base
+  has_many :test_reports, dependent: :destroy
+
   validates :name, presence: true
   validates :namespace, presence: true
   validates :token, presence: true, length: { is: 64 }
