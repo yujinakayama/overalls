@@ -17,3 +17,7 @@ group :development, :test do
   gem 'spring'
   gem 'spring-commands-rspec'
 end
+
+group :development do
+  gem 'pry-byebug'
+end
