@@ -29,6 +29,11 @@ class Build < ActiveRecord::Base
     test_reports.count >= parallelism
   end
 
+  def base_build
+    repository.main_branch_builds
+      .where('committed_at < ?', committed_at).order(committed_at: :desc).first
+  end
+
   def source_files
     @source_files ||= test_reports.each_with_object([]) do |test_report, all_source_files|
       all_source_files.concat(test_report.source_files)

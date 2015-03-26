@@ -10,4 +10,8 @@ class Repository < ActiveRecord::Base
     self.main_branch ||= 'master'
     self.token ||= SecureRandom.hex(32)
   end
+
+  def main_branch_builds
+    builds.where(branch: main_branch)
+  end
 end
