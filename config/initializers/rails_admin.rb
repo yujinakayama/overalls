@@ -17,14 +17,14 @@ RailsAdmin.config do |config|
 
   if ENV['ADMIN_USERNAME'] && ENV['ADMIN_PASSWORD']
     credential = { ENV['ADMIN_USERNAME'] => ENV['ADMIN_PASSWORD'] }
-  else
-    fail 'You must set environment variables ADMIN_USERNAME and ADMIN_PASSWORD.'
-  end
 
-  config.authorize_with do
-    authenticate_or_request_with_http_digest do |username|
-      credential[username]
+    config.authorize_with do
+      authenticate_or_request_with_http_digest do |username|
+        credential[username]
+      end
     end
+  elsif !Rails.env.development? && !Rails.env.test?
+    fail 'You must set environment variables ADMIN_USERNAME and ADMIN_PASSWORD.'
   end
 
   config.actions do
