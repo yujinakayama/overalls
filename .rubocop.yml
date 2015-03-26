@@ -6,6 +6,9 @@ AllCops:
   - vendor/**/*
   RunRailsCops: true
 
+Metrics/AbcSize:
+  Max: 17
+
 Metrics/LineLength:
   Max: 100
 

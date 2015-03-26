@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150326051147) do
+ActiveRecord::Schema.define(version: 20150326072304) do
+
+  create_table "builds", force: :cascade do |t|
+    t.integer  "repository_id", limit: 4,   null: false
+    t.string   "name",          limit: 255, null: false
+    t.string   "branch",        limit: 255, null: false
+    t.integer  "parallelism",   limit: 4,   null: false
+    t.datetime "committed_at",              null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "builds", ["repository_id", "name"], name: "index_builds_on_repository_id_and_name", using: :btree
 
   create_table "repositories", force: :cascade do |t|
     t.string   "name",       limit: 255, null: false
@@ -24,15 +36,13 @@ ActiveRecord::Schema.define(version: 20150326051147) do
   add_index "repositories", ["token"], name: "index_repositories_on_token", unique: true, using: :btree
 
   create_table "test_reports", force: :cascade do |t|
-    t.integer  "repository_id",   limit: 4,     null: false
-    t.string   "branch",          limit: 255,   null: false
+    t.integer  "build_id",        limit: 4
     t.float    "covered_percent", limit: 24,    null: false
-    t.datetime "committed_at",                  null: false
     t.datetime "run_at",                        null: false
     t.datetime "created_at",                    null: false
     t.binary   "gzipped_json",    limit: 65535
   end
 
-  add_index "test_reports", ["repository_id"], name: "index_test_reports_on_repository_id", using: :btree
+  add_index "test_reports", ["build_id"], name: "index_test_reports_on_build_id", using: :btree
 
 end

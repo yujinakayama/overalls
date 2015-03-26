@@ -48,12 +48,10 @@
 #
 # rubocop:enable LineLength
 class TestReport < ActiveRecord::Base
-  belongs_to :repository
+  belongs_to :build
 
-  validates :repository_id, presence: true
-  validates :branch, presence: true
+  validates :build_id, presence: true
   validates :covered_percent, presence: true
-  validates :committed_at, presence: true
   validates :run_at, presence: true
   validates :gzipped_json, presence: true
 
@@ -62,11 +60,14 @@ class TestReport < ActiveRecord::Base
            to: :data
 
   before_validation on: :create do
-    self.repository = Repository.find_by(token: data.repo_token)
-    self.branch = data.git.branch
-    self.covered_percent = data.covered_percent
-    self.committed_at = Time.at(data.git.committed_at)
-    self.run_at = Time.at(data.run_at)
+    self.build ||= repository.builds.find_by(name: build_name) if repository
+    self.build ||= Build.create(seed_test_report: self)
+    self.covered_percent ||= data.covered_percent
+    self.run_at ||= Time.at(data.run_at)
+  end
+
+  def repository
+    Repository.find_by(token: repo_token)
   end
 
   def data
@@ -85,6 +86,10 @@ class TestReport < ActiveRecord::Base
 
   def keys
     data.each_pair.map(&:first)
+  end
+
+  def build_name
+    [ci_service.name, ci_service.build_identifier].join('-')
   end
 
   def partial?

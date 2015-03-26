@@ -1,5 +1,5 @@
 class Repository < ActiveRecord::Base
-  has_many :test_reports, dependent: :destroy
+  has_many :builds, dependent: :destroy
 
   validates :name, presence: true
   validates :namespace, presence: true

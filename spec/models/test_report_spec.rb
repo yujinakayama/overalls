@@ -8,6 +8,54 @@ RSpec.describe TestReport do
     expect(test_report).to respond_to(*attributes)
   end
 
+  context 'on creation' do
+    subject(:new_test_report) { build(:test_report) }
+
+    context 'when no corresponding build exists' do
+      it 'creates a build and associates itself with the build' do
+        expect { new_test_report.save }
+          .to change { new_test_report.build }.from(nil).to(an_instance_of(Build))
+          .and change { Build.count }.by(1)
+      end
+    end
+
+    context 'when another build for the same repository exists' do
+      before do
+        create(:build, repository: new_test_report.repository, name: 'another_build')
+      end
+
+      it 'creates a build and associates itself with the build' do
+        expect { new_test_report.save }
+          .to change { new_test_report.build }.from(nil).to(an_instance_of(Build))
+          .and change { Build.count }.by(1)
+      end
+    end
+
+    context 'when a same name build for another repository exists' do
+      before do
+        create(:build, name: new_test_report.build_name)
+      end
+
+      it 'creates a build and associates itself with the build' do
+        expect { new_test_report.save }
+          .to change { new_test_report.build }.from(nil).to(an_instance_of(Build))
+          .and change { Build.count }.by(1)
+      end
+    end
+
+    context 'when a corresponding build exists' do
+      before do
+        create(:build, repository: new_test_report.repository, name: new_test_report.build_name)
+      end
+
+      it 'associates itself with the build without creating new one' do
+        expect { new_test_report.save }
+          .to change { new_test_report.build }.from(nil).to(an_instance_of(Build))
+          .and change { Build.count }.by(0)
+      end
+    end
+  end
+
   describe '#data' do
     it 'returns decoded json data' do
       expect(test_report.data).to have_attributes(source_files: an_instance_of(Array))
