@@ -66,6 +66,10 @@ class TestReport < ActiveRecord::Base
     self.run_at ||= Time.at(data.run_at)
   end
 
+  after_create do
+    build.aggregate!
+  end
+
   def repository
     Repository.find_by(token: repo_token)
   end
