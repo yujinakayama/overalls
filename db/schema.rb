@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150325160941) do
+ActiveRecord::Schema.define(version: 20150326051147) do
 
   create_table "repositories", force: :cascade do |t|
     t.string   "name",       limit: 255, null: false
@@ -27,10 +27,10 @@ ActiveRecord::Schema.define(version: 20150325160941) do
     t.integer  "repository_id",   limit: 4,     null: false
     t.string   "branch",          limit: 255,   null: false
     t.float    "covered_percent", limit: 24,    null: false
-    t.text     "json",            limit: 65535, null: false
     t.datetime "committed_at",                  null: false
     t.datetime "run_at",                        null: false
     t.datetime "created_at",                    null: false
+    t.binary   "gzipped_json",    limit: 65535
   end
 
   add_index "test_reports", ["repository_id"], name: "index_test_reports_on_repository_id", using: :btree

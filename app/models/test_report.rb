@@ -47,9 +47,9 @@ class TestReport < ActiveRecord::Base
   validates :repository_id, presence: true
   validates :branch, presence: true
   validates :covered_percent, presence: true
-  validates :json, presence: true
   validates :committed_at, presence: true
   validates :run_at, presence: true
+  validates :gzipped_json, presence: true
 
   delegate :ci_service, :covered_strength, :environment, :git, :line_counts, :partial, :repo_token,
            :source_files,
@@ -65,26 +65,33 @@ class TestReport < ActiveRecord::Base
     self.run_at = Time.at(data.run_at)
   end
 
-  before_create do
+  def data
+    @data ||= JSON.parse(json, object_class: OpenStruct)
+  end
+
+  def json
+    ActiveSupport::Gzip.decompress(gzipped_json)
+  end
+
+  def json=(json)
+    slimmed_json = slim_json(json)
+    self.gzipped_json = ActiveSupport::Gzip.compress(slimmed_json)
+    @data = nil
+  end
+
+  def keys
+    data.each_pair.map(&:first)
+  end
+
+  private
+
+  def slim_json(json)
     hash = JSON.parse(json, symbolize_names: true)
 
     hash[:source_files].each do |source_file|
       source_file.delete(:coverage)
     end
 
-    self.json = JSON.generate(hash)
-  end
-
-  def json=(*)
-    super
-    @data = nil
-  end
-
-  def data
-    @data ||= JSON.parse(json, object_class: OpenStruct)
-  end
-
-  def keys
-    data.each_pair.map(&:first)
+    JSON.generate(hash)
   end
 end
