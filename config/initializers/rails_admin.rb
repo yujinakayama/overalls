@@ -43,7 +43,17 @@ RailsAdmin.config do |config|
     # history_show
   end
 
+  config.model 'Repository' do
+    weight 10
+  end
+
+  config.model 'Build' do
+    weight 20
+  end
+
   config.model 'TestReport' do
+    weight 30
+
     show do
       include_all_fields
 
