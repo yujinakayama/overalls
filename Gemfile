@@ -5,6 +5,7 @@ gem 'rails', '4.2.1'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'mysql2'
+gem 'rails_admin'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 
