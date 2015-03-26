@@ -18,4 +18,8 @@ class Build < ActiveRecord::Base
     self.parallelism ||= seed_test_report.ci_service.node_total || 1
     self.committed_at ||= Time.at(seed_test_report.git.committed_at)
   end
+
+  def completed?
+    test_reports.count >= parallelism
+  end
 end

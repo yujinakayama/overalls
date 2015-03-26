@@ -49,6 +49,15 @@ RailsAdmin.config do |config|
 
   config.model 'Build' do
     weight 20
+
+    list do
+      field :repository
+      field :name
+      field :branch
+      field :parallelism
+      field :completed?
+      field :committed_at
+    end
   end
 
   config.model 'TestReport' do
