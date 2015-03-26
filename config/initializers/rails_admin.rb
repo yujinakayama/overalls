@@ -56,7 +56,6 @@ RailsAdmin.config do |config|
       field :branch
       field :parallelism
       field :covered_percent
-      field :completed?
       field :committed_at
     end
   end
