@@ -9,6 +9,11 @@ gem 'rails_admin'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 
+group :production do
+  gem 'puma'
+  gem 'rails_12factor'
+end
+
 group :development, :test do
   gem 'database_cleaner'
   gem 'factory_girl_rails'
