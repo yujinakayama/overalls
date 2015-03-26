@@ -12,4 +12,10 @@ RSpec.describe TestReport do
       expect(test_report.data).to have_attributes(source_files: an_instance_of(Array))
     end
   end
+
+  describe '#source_files' do
+    it 'does not have `coverage` attribute to reduce the data size' do
+      expect(test_report.source_files).to all satisfy { |file| file.coverage.nil? }
+    end
+  end
 end

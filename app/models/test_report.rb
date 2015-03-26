@@ -65,6 +65,21 @@ class TestReport < ActiveRecord::Base
     self.run_at = Time.at(data.run_at)
   end
 
+  before_create do
+    hash = JSON.parse(json, symbolize_names: true)
+
+    hash[:source_files].each do |source_file|
+      source_file.delete(:coverage)
+    end
+
+    self.json = JSON.generate(hash)
+  end
+
+  def json=(*)
+    super
+    @data = nil
+  end
+
   def data
     @data ||= JSON.parse(json, object_class: OpenStruct)
   end
