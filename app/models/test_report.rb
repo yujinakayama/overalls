@@ -38,7 +38,13 @@
 #      "rails_root"=>nil,
 #      "simplecov_root"=>"/Users/me/Projects/safedep",
 #      "gem_version"=>"0.4.7"},
-#    "ci_service"=>{}}}
+#    "ci_service"=>
+#     {"name"=>"circlci",
+#      "build_identifier"=>17221,
+#      "branch"=>"overalls",
+#      "commit_sha"=>"bb2293e78699e2c3ab594a754340b6a17e1e9d49",
+#      "node_index"=>0,
+#      "node_total"=>2}}}
 #
 # rubocop:enable LineLength
 class TestReport < ActiveRecord::Base
@@ -51,11 +57,9 @@ class TestReport < ActiveRecord::Base
   validates :run_at, presence: true
   validates :gzipped_json, presence: true
 
-  delegate :ci_service, :covered_strength, :environment, :git, :line_counts, :partial, :repo_token,
+  delegate :ci_service, :covered_strength, :environment, :git, :line_counts, :repo_token,
            :source_files,
            to: :data
-
-  alias_method :partial?, :partial
 
   before_validation on: :create do
     self.repository = Repository.find_by(token: data.repo_token)
@@ -81,6 +85,10 @@ class TestReport < ActiveRecord::Base
 
   def keys
     data.each_pair.map(&:first)
+  end
+
+  def partial?
+    data.partial || data.ci_service.node_total.to_i > 1
   end
 
   private
