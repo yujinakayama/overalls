@@ -89,7 +89,9 @@ class TestReport < ActiveRecord::Base
   end
 
   def build_name
-    [ci_service.name, ci_service.build_identifier].join('-')
+    service = ci_service.name || 'local'
+    identifier = ci_service.build_identifier || Time.at(git.committed_at).strftime('%Y%m%d_%H%M%S')
+    "#{service}-#{identifier}"
   end
 
   def partial?

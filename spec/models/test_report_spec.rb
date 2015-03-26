@@ -62,6 +62,29 @@ RSpec.describe TestReport do
     end
   end
 
+  describe '#build_name' do
+    context 'when `ci_service.name` and `ci_service.build_identifier` are set' do
+      before do
+        test_report.ci_service.name = 'circleci'
+        test_report.ci_service.build_identifier = '12345'
+      end
+
+      it 'returns a name consist of them' do
+        expect(test_report.build_name).to eq('circleci-12345')
+      end
+    end
+
+    context 'when `ci_service.name` and `ci_service.build_identifier` are not set' do
+      before do
+        test_report.data.ci_service = OpenStruct.new
+      end
+
+      it 'returns a name consist of "local" and time from `git.committed_at`' do
+        expect(test_report.build_name).to start_with('local-').and match('-\d{8}_\d{6}$')
+      end
+    end
+  end
+
   describe '#source_files' do
     it 'does not have `coverage` attribute to reduce the data size' do
       expect(test_report.source_files).to all satisfy { |file| file.coverage.nil? }
