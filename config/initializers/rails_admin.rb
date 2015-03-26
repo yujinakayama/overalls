@@ -63,6 +63,13 @@ RailsAdmin.config do |config|
   config.model 'TestReport' do
     weight 30
 
+    list do
+      field :build
+      field :covered_percent
+      field :partial?
+      field :run_at
+    end
+
     show do
       include_all_fields
 
