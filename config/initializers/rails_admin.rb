@@ -51,5 +51,16 @@ RailsAdmin.config do |config|
       field :committed_at
       field :run_at
     end
+
+    show do
+      include_all_fields
+
+      field :json do
+        pretty_value do
+          pretty_json = JSON.pretty_generate(JSON.parse(value))
+          bindings[:view].content_tag(:pre, pretty_json)
+        end
+      end
+    end
   end
 end
