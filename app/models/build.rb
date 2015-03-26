@@ -10,6 +10,8 @@ class Build < ActiveRecord::Base
   validates :parallelism, presence: true
   validates :committed_at, presence: true
 
+  delegate :git, to: :test_report, allow_nil: true
+
   before_validation on: :create do
     next unless seed_test_report
     self.repository ||= Repository.find_by(token: seed_test_report.repo_token)
@@ -38,6 +40,20 @@ class Build < ActiveRecord::Base
     @source_files ||= test_reports.each_with_object([]) do |test_report, all_source_files|
       all_source_files.concat(test_report.source_files)
     end
+  end
+
+  def test_report
+    test_reports.first
+  end
+
+  def as_json(*)
+    {
+               branch: branch,
+         committed_at: committed_at,
+            completed: completed?,
+      covered_percent: covered_percent,
+                  sha: git.head
+    }
   end
 
   private
