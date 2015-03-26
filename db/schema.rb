@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150326132916) do
+ActiveRecord::Schema.define(version: 20150326151321) do
 
   create_table "builds", force: :cascade do |t|
     t.integer  "repository_id",   limit: 4,   null: false
@@ -27,11 +27,12 @@ ActiveRecord::Schema.define(version: 20150326132916) do
   add_index "builds", ["repository_id", "name"], name: "index_builds_on_repository_id_and_name", using: :btree
 
   create_table "repositories", force: :cascade do |t|
-    t.string   "name",       limit: 255, null: false
-    t.string   "namespace",  limit: 255, null: false
-    t.string   "token",      limit: 64,  null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",        limit: 255, null: false
+    t.string   "namespace",   limit: 255, null: false
+    t.string   "main_branch", limit: 255
+    t.string   "token",       limit: 64,  null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   add_index "repositories", ["token"], name: "index_repositories_on_token", unique: true, using: :btree
