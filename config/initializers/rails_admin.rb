@@ -30,4 +30,14 @@ RailsAdmin.config do |config|
     # history_index
     # history_show
   end
+
+  config.model 'TestReport' do
+    list do
+      field :repository
+      field :branch
+      field :covered_percent
+      field :committed_at
+      field :run_at
+    end
+  end
 end
